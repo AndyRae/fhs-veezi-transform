@@ -1,0 +1,9 @@
+.DS_Store
+.project
+*.pyc
+*local_settings.*
+*.vscode
+/env/
+/static/
+/media/
+*.csv
