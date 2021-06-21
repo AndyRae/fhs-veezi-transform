@@ -1,9 +1,5 @@
-import base64
 import pandas as pd
-import streamlit as st
-
 from datetime import datetime
-
 
 def raw_report(df, name):
     df = df[["Film", "Admits", "Shows"]]
@@ -93,63 +89,15 @@ def format(file, name):
         # Means it's a marketing report
         df = marketing_report(df, name)
 
-    download = st.button("Convert data")
+    df.to_csv(f"{name}.csv", index=False)
+        
 
-    if download:
-        tmp_download_link = download_link(df, name+'_venue_data.csv', 'Click here to download your converted data.')
-        st.markdown(tmp_download_link, unsafe_allow_html=True)
-
-
-def download_link(object_to_download, download_filename, download_link_text):
-    """
-    Generates a link to download the given object_to_download.
-
-    object_to_download (str, pd.DataFrame):  The object to be downloaded.
-    download_filename (str): filename and extension of file. e.g. mydata.csv, some_txt_output.txt
-    download_link_text (str): Text to display for download link.
-
-    Examples:
-    download_link(YOUR_DF, 'YOUR_DF.csv', 'Click here to download data!')
-    download_link(YOUR_STRING, 'YOUR_STRING.txt', 'Click here to download your text!')
-
-    """
-    if isinstance(object_to_download,pd.DataFrame):
-        object_to_download = object_to_download.to_csv(index=False)
-
-    # some strings <-> bytes conversions necessary here
-    b64 = base64.b64encode(object_to_download.encode()).decode()
-
-    return f'<a href="data:file/txt;base64,{b64}" download="{download_filename}">{download_link_text}</a>'
+    # if st.button('Download converted data as CSV'):
+	#     tmp_download_link = download_link(df, name+'_venue_data.csv', 'Click here to download your converted data.')
+	#     st.markdown(tmp_download_link, unsafe_allow_html=True)
 
 
-title = "Veezi Convertor"
-
-st.set_page_config(page_title=title, page_icon=None, layout='centered', initial_sidebar_state='auto')
-
-st.title(title)
-st.subheader("For the Cinema Incentive Scheme and Film Hub Scotland.")
-
-st.markdown("---")
-
-st.subheader("What it does:")
-
-st.write("This tool converts a Veezi marketing report into usable data for the Cinema Incentive Scheme.")
-
-st.subheader("How to use it:")
-
-st.write("Works best with Google Chrome, not with Safari")
-
-st.write("Enter the name of the venue below, upload the marketing report, and a button will appear below to download the converted data.")
-
-s = st.text_input('Enter the venue name here:')
-
-uploaded_file = st.file_uploader("Choose a file")
-
-st.markdown("---")
-
-st.write("*Not working? Email: hello@rae.li*")
-
-st.markdown("---")
-
-if uploaded_file is not None:
-    format(uploaded_file, s)
+format('test1.xlsx', "Oban")
+format('test2.xlsx', "CPH")
+format('test3.xlsx', "birks")
+print("Done")
